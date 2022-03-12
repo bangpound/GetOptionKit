@@ -27,11 +27,9 @@ class OptionTest extends \PHPUnit\Framework\TestCase
         $this->assertNotNull($opt);
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testInvalidOptionSpec()
     {
+        $this->expectException(Exception::class);
         new Option('....');
     }
 
@@ -87,21 +85,17 @@ class OptionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('--scope', $opt->renderReadableSpec(true));
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testInvalidTypeClass()
     {
+        $this->expectException(Exception::class);
         $opt = new Option('scope');
         $opt->isa('SomethingElse');
         $class = $opt->getTypeClass();
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testValidatorReturnValue()
     {
+        $this->expectException(InvalidArgumentException::class);
         $opt = new Option('scope');
         $opt->validator(function($val) {
             return 123454;

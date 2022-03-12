@@ -1,4 +1,6 @@
 <?php
+
+use GetOptionKit\Exception\OptionConflictException;
 use GetOptionKit\Option;
 use GetOptionKit\OptionCollection;
 
@@ -13,31 +15,25 @@ class OptionCollectionTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    /**
-     * @expectedException LogicException
-     */
     public function testAddInvalidOption()
     {
+        $this->expectException(LogicException::class);
         $opts = new OptionCollection;
         $opts->add(123);
     }
 
-    /**
-     * @expectedException GetOptionKit\Exception\OptionConflictException
-     */
     public function testOptionConflictShort()
     {
+        $this->expectException(OptionConflictException::class);
         $opts = new OptionCollection;
         $opts->add('r|repeat');
         $opts->add('t|time');
         $opts->add('r|regex');
     }
 
-    /**
-     * @expectedException GetOptionKit\Exception\OptionConflictException
-     */
     public function testOptionConflictLong()
     {
+        $this->expectException(OptionConflictException::class);
         $opts = new OptionCollection;
         $opts->add('r|repeat');
         $opts->add('t|time');

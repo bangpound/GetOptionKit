@@ -4,6 +4,9 @@ use GetOptionKit\OptionCollection;
 
 class ConsoleOptionPrinterTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @doesNotPerformAssertions
+     */
     public function test()
     {
         $options = new OptionCollection;

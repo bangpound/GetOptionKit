@@ -8,7 +8,10 @@
  * file that was distributed with this source code.
  *
  */
+
+use GetOptionKit\Exception\InvalidOptionException;
 use GetOptionKit\Exception\InvalidOptionValueException;
+use GetOptionKit\Exception\RequireValueException;
 use GetOptionKit\OptionCollection;
 use GetOptionKit\OptionParser;
 use GetOptionKit\Option;
@@ -18,17 +21,15 @@ class OptionParserTest extends \PHPUnit\Framework\TestCase
     public $parser;
     public $specs;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->specs = new OptionCollection;
         $this->parser = new OptionParser($this->specs);
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testInvalidOption()
     {
+        $this->expectException(Exception::class);
         $options = new OptionCollection;
         $options->addOption(new Option(0));
     }
@@ -126,6 +127,9 @@ class OptionParserTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($options->find('xyz'));
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testRequire()
     {
         $this->specs->add( 'f|foo:' , 'option require value' );
@@ -234,12 +238,9 @@ class OptionParserTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(3, $result['verbose']->value);
     }
 
-
-    /**
-     * @expectedException Exception
-     */
     public function testIntegerTypeNonNumeric()
     {
+        $this->expectException(Exception::class);
         $opt = new OptionCollection;
         $opt->add( 'b|bar:=number' , 'option with integer type' );
 
@@ -375,29 +376,23 @@ class OptionParserTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testParseWithoutProgramName()
     {
+        $this->expectException(Exception::class);
         $parser = new OptionParser(new OptionCollection);
         $parser->parse(array('--foo'));
     }
 
-    /**
-     * @expectedException GetOptionKit\Exception\InvalidOptionException
-     */
     public function testParseInvalidOptionException()
     {
+        $this->expectException(InvalidOptionException::class);
         $parser = new OptionParser(new OptionCollection);
         $parser->parse(array('app','--foo'));
     }
 
-    /**
-     * @expectedException GetOptionKit\Exception\RequireValueException
-     */
     public function testParseOptionRequireValueException()
     {
+        $this->expectException(RequireValueException::class);
         $options = new OptionCollection;
         $options->add('name:=string', 'name');
 
@@ -461,11 +456,9 @@ class OptionParserTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayHasKey('f', $result);
     }
 
-    /**
-     * @expectedException GetOptionKit\Exception\InvalidOptionValueException
-     */
     public function testParseThrowsExceptionOnInvalidOption()
     {
+        $this->expectException(InvalidOptionValueException::class);
         $this->specs
             ->add('f:foo', 'test option')
             ->validator(function($value) {
